@@ -3,6 +3,7 @@
 #include <time.h>
 #include <sys/timeb.h>
 #include <unistd.h>
+#include <string.h>
 
 #if 1
 #define DEBUG
@@ -31,14 +32,15 @@ char get_input()
 int main(void)
 {
     FILE *fp;
-    int exam_num;
-    int words_num = 0;
-    int correct_num;
-    char words[1000];
-    char file_name[20];
-    char result[20];
+    char *date;
     float score;
-
+    int exam_num;
+    time_t timep;
+    int correct_num;
+    char result[100];
+    char words[1000];
+    int words_num = 0;
+    char file_name[20];
 
 	printf("Please input exam number:");
     scanf("%d", &exam_num);
@@ -78,9 +80,12 @@ int main(void)
     score = ((float)correct_num/(float)words_num) * 100;
 	printf("Score: %f\n", score);
 
+    time (&timep);
     fseek(fp, 0L, SEEK_END);
-    sprintf(result, "score: %f\n", score);
-    dbg("\nresulf: %s\n", result);
+    date = ctime(&timep);
+    date[strlen(date)-1] = 0;
+    sprintf(result, "%s score: %f\n", date, score);
+    //dbg("\nresult: %s\n", result);
     fputs(result, fp);
 
     fclose(fp);
