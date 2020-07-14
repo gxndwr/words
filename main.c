@@ -78,13 +78,13 @@ int main(void)
 	printf("Correct number:");
     scanf("%d", &correct_num);
     score = ((float)correct_num/(float)words_num) * 100;
-	printf("Score: %f\n", score);
+	printf("Score: %.1f\n", score);
 
     time (&timep);
     fseek(fp, 0L, SEEK_END);
     date = ctime(&timep);
     date[strlen(date)-1] = 0;
-    sprintf(result, "%s score: %f\n", date, score);
+    sprintf(result, "%s score: %.1f\n", date, score);
     //dbg("\nresult: %s\n", result);
     fputs(result, fp);
 
