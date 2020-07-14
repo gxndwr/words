@@ -29,8 +29,14 @@ char get_input()
 }
 #endif
 
+struct words_struct {
+    char word[100][20];
+    int num;
+} w;
+
 int main(void)
 {
+    int i;
     FILE *fp;
     char *date;
     float score;
@@ -40,8 +46,10 @@ int main(void)
     char result[100];
     char words[1000];
     int words_num = 0;
+    int char_index = 0;
     char file_name[20];
 
+    w.num = 0;
 	printf("Please input exam number:");
     scanf("%d", &exam_num);
     printf("exam number: %d\n", exam_num);
@@ -56,23 +64,33 @@ int main(void)
     //dbg("exam words: %s\n", words);
     getchar();
 
-    for (int i = 0; i<1000; i++) {
+    for (i = 0; i<1000; i++) {
         //dbg("i: %d\n", i);
         if (words[i] == '\n') {
-            printf("%c", words[i]);
-            words_num++;
+            //printf("%c", words[i]);
+            //words_num++;
+            w.num++;
             break;
         }
 
         if (words[i] == 32){
             //dbg("\nwords[%d]: %d\n", i, words[i]);
-            words_num++;
-            getchar();
+            //words_num++;
+            w.word[w.num][char_index + 1] = 0;
+            w.num++;
+            char_index = 0;
+            //getchar();
             continue;
         }
 
-        printf("%c", words[i]);
+        //printf("%c", words[i]);
+        w.word[w.num][char_index++] = words[i];
     }
+
+    for (i = 0; i < w.num; i++) {
+        printf("%s\n", &w.word[i][0]);
+    }
+    return 0;
     printf("Total: %d\n", words_num);
 
 	printf("Correct number:");
