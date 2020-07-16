@@ -78,6 +78,7 @@ int main(void)
     sprintf(file_name, "%d", exam_num);
     sprintf(file_name, "%s.exam", file_name);
     printf("exam file name: %s\n\n", file_name);
+    printf("(pess 'y' if remember, otherwise press other key)\n");
 
     // collect launch time as random seed for word index producing
 	ftime(&timeSeed);
