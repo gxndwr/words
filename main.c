@@ -103,11 +103,13 @@ int main(void)
             return -1;
         }
         //dbg("i: %d\n", i);
-        if (words[i] == 32){
-            exam.word[exam.num].question[char_index + 1] = 0;
-            exam.word[exam.num].flag |= VALID;
-            char_index = 0;
-            exam.num++;
+        if (words[i] == ' ') {
+            if (char_index != 0) {
+                exam.word[exam.num].question[char_index + 1] = 0;
+                exam.word[exam.num].flag |= VALID;
+                char_index = 0;
+                exam.num++;
+            }
             i++;
             continue;
         }
