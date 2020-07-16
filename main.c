@@ -28,28 +28,38 @@ char get_input()
     return getchar();
 }
 #endif
+#define MAX_WORDS_NUM 100
+#define VALID   (1 << 0)
+#define CHECKED (1 << 1)
+struct word_struct {
+    char word[20];
+    int flag;
+};
 
 struct words_struct {
-    char word[100][20];
+    struct word_struct word[MAX_WORDS_NUM];
     int num;
 } w;
+
+static struct timeb timeSeed;
 
 int main(void)
 {
     int i;
     FILE *fp;
+    char file_name[20];
+    time_t timep;
+    int word_seed;
+    int exam_num;
+    int correct_num;
+    char words[1000];
+    char result[MAX_WORDS_NUM];
+    int char_index = 0;
+    int checked_num = 0;
     char *date;
     float score;
-    int exam_num;
-    time_t timep;
-    int correct_num;
-    char result[100];
-    char words[1000];
-    int words_num = 0;
-    int char_index = 0;
-    char file_name[20];
 
-    w.num = 0;
+    // collect input about exam number
 	printf("Please input exam number:");
     scanf("%d", &exam_num);
     printf("exam number: %d\n", exam_num);
@@ -58,46 +68,60 @@ int main(void)
     sprintf(file_name, "%s.exam", file_name);
     printf("exam file name: %s\n\n", file_name);
 
+    // collect launch time as random seed for word index producing
+	ftime(&timeSeed);
+    word_seed = timeSeed.time * 1000 + timeSeed.millitm;
+	srand(word_seed);
+
+    // import data from first line of exam file
     fp = fopen(file_name, "a+");
     fseek(fp, 0L, SEEK_SET);
     fgets(words, 1000, fp);
     //dbg("exam words: %s\n", words);
     getchar();
 
-    for (i = 0; i<1000; i++) {
-        //dbg("i: %d\n", i);
-        if (words[i] == '\n') {
-            //printf("%c", words[i]);
-            //words_num++;
-            w.num++;
-            break;
+    i = 0;
+    w.num = 0;
+    while(words[i] != '\n') {
+        if (w.num > MAX_WORDS_NUM) {
+            printf("Words number more than %d\n", MAX_WORDS_NUM);
+            return -1;
         }
-
+        //dbg("i: %d\n", i);
         if (words[i] == 32){
-            //dbg("\nwords[%d]: %d\n", i, words[i]);
-            //words_num++;
-            w.word[w.num][char_index + 1] = 0;
-            w.num++;
+            w.word[w.num].word[char_index + 1] = 0;
+            w.word[w.num].flag |= VALID;
             char_index = 0;
-            //getchar();
+            w.num++;
+            i++;
             continue;
         }
+        w.word[w.num].word[char_index++] = words[i];
+        i++;
+    }
+    w.word[w.num++].flag |= VALID; // for the last word
 
-        //printf("%c", words[i]);
-        w.word[w.num][char_index++] = words[i];
+    // display word one by one
+    for (i = 0; checked_num < w.num; i++) {
+        int index = rand()%w.num;
+        if (!(w.word[index].flag & CHECKED)) {
+                w.word[index].flag |= CHECKED;
+                checked_num++;
+                //dbg("w.word[%02d]: %s \t checked_num: %d\n", index, w.word[index].word, checked_num);
+                printf("%s", w.word[index].word);
+                getchar();
+        }
     }
 
-    for (i = 0; i < w.num; i++) {
-        printf("%s\n", &w.word[i][0]);
-    }
-    return 0;
-    printf("Total: %d\n", words_num);
+    printf("Total: %d\n", w.num);
 
+    // Collect correct num and calculated score
 	printf("Correct number:");
     scanf("%d", &correct_num);
-    score = ((float)correct_num/(float)words_num) * 100;
+    score = ((float)correct_num/(float)w.num) * 100;
 	printf("Score: %.1f\n", score);
 
+    // append result to the end of file
     time (&timep);
     fseek(fp, 0L, SEEK_END);
     date = ctime(&timep);
