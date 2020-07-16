@@ -22,16 +22,17 @@ void dbg(char *format, ...)
 #define VALID   (1 << 0)
 #define CHECKED (1 << 1)
 #define ANSWER  (1 << 2)
+
 struct word_struct {
-    char word[20];
+    char question[20];
+    char answer[20];
     int flag;
 };
 
-struct words_struct {
-    struct word_struct question[MAX_WORDS_NUM];
-    struct word_struct answer[MAX_WORDS_NUM];
+struct exam_struct {
+    struct word_struct word[MAX_WORDS_NUM];
     int num;
-} w;
+} exam;
 
 static struct timeb timeSeed;
 
@@ -95,59 +96,63 @@ int main(void)
     getchar();
 
     i = 0;
-    w.num = 0;
+    exam.num = 0;
     while(words[i] != '\n') {
-        if (w.num > MAX_WORDS_NUM) {
+        if (exam.num > MAX_WORDS_NUM) {
             printf("Words number more than %d\n", MAX_WORDS_NUM);
             return -1;
         }
         //dbg("i: %d\n", i);
         if (words[i] == 32){
-            w.question[w.num].word[char_index + 1] = 0;
-            w.question[w.num].flag |= VALID;
+            exam.word[exam.num].question[char_index + 1] = 0;
+            exam.word[exam.num].flag |= VALID;
             char_index = 0;
-            w.num++;
+            exam.num++;
             i++;
             continue;
         }
 
         if (words[i] == ':') {
-            w.question[w.num].flag |= ANSWER;
+            exam.word[exam.num].flag |= ANSWER;
             char_index = 0;
             i++;
             continue;
         }
 
-        if(w.question[w.num].flag & ANSWER)
-            w.answer[w.num].word[char_index++] = words[i];
+        if(exam.word[exam.num].flag & ANSWER)
+            exam.word[exam.num].answer[char_index++] = words[i];
         else
-            w.question[w.num].word[char_index++] = words[i];
+            exam.word[exam.num].question[char_index++] = words[i];
 
         i++;
     }
-    w.question[w.num++].flag |= VALID; // for the last word
+    exam.word[exam.num++].flag |= VALID; // for the last word
 
     // display word one by one
     correct_num = 0;
     disable_io_buffer();
-    for (i = 0; checked_num < w.num; i++) {
-        int index = rand()%w.num;
-        if (!(w.question[index].flag & CHECKED)) {
-                w.question[index].flag |= CHECKED;
+    for (i = 0; checked_num < exam.num; i++) {
+        int index = rand()%exam.num;
+        if (!(exam.word[index].flag & CHECKED)) {
+                exam.word[index].flag |= CHECKED;
                 checked_num++;
-                //dbg("w.question[%02d]: %s \t checked_num: %d\n", index, w.question[index].word, checked_num);
-                printf("%s\n", w.question[index].word);
+                //dbg("exam.word[%02d]: %s \t checked_num: %d\n", index, exam.word[index].question, checked_num);
+                printf("%s: ",exam.word[index].question);
                 answer = getchar();
 #ifndef MANUAL_CHECK
-                if (answer == 'y')
+                if (answer == 'y') {
                     correct_num++;
+                    printf("\n");
+                } else
+                    printf("%s\n",exam.word[index].answer);
+
 #endif
 
         }
     }
     enable_io_buffer();
 
-    printf("Total: %d\n", w.num);
+    printf("Total: %d\n", exam.num);
 #ifdef MANUAL_CHECK
     // Collect correct num and calculated score
 	printf("Correct number:");
@@ -155,7 +160,7 @@ int main(void)
 #else
 	printf("Correct: %d\n", correct_num);
 #endif
-    score = ((float)correct_num/(float)w.num) * 100;
+    score = ((float)correct_num/(float)exam.num) * 100;
 	printf("Score: %.1f\n", score);
 
     // append result to the end of file
