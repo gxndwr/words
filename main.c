@@ -21,13 +21,15 @@ void dbg(char *format, ...)
 #define MAX_WORDS_NUM 100
 #define VALID   (1 << 0)
 #define CHECKED (1 << 1)
+#define ANSWER  (1 << 2)
 struct word_struct {
     char word[20];
     int flag;
 };
 
 struct words_struct {
-    struct word_struct word[MAX_WORDS_NUM];
+    struct word_struct question[MAX_WORDS_NUM];
+    struct word_struct answer[MAX_WORDS_NUM];
     int num;
 } w;
 
@@ -101,28 +103,40 @@ int main(void)
         }
         //dbg("i: %d\n", i);
         if (words[i] == 32){
-            w.word[w.num].word[char_index + 1] = 0;
-            w.word[w.num].flag |= VALID;
+            w.question[w.num].word[char_index + 1] = 0;
+            w.question[w.num].flag |= VALID;
             char_index = 0;
             w.num++;
             i++;
             continue;
         }
-        w.word[w.num].word[char_index++] = words[i];
+
+        if (words[i] == ':') {
+            w.question[w.num].flag |= ANSWER;
+            char_index = 0;
+            i++;
+            continue;
+        }
+
+        if(w.question[w.num].flag & ANSWER)
+            w.answer[w.num].word[char_index++] = words[i];
+        else
+            w.question[w.num].word[char_index++] = words[i];
+
         i++;
     }
-    w.word[w.num++].flag |= VALID; // for the last word
+    w.question[w.num++].flag |= VALID; // for the last word
 
     // display word one by one
     correct_num = 0;
     disable_io_buffer();
     for (i = 0; checked_num < w.num; i++) {
         int index = rand()%w.num;
-        if (!(w.word[index].flag & CHECKED)) {
-                w.word[index].flag |= CHECKED;
+        if (!(w.question[index].flag & CHECKED)) {
+                w.question[index].flag |= CHECKED;
                 checked_num++;
-                //dbg("w.word[%02d]: %s \t checked_num: %d\n", index, w.word[index].word, checked_num);
-                printf("%s\n", w.word[index].word);
+                //dbg("w.question[%02d]: %s \t checked_num: %d\n", index, w.question[index].word, checked_num);
+                printf("%s\n", w.question[index].word);
                 answer = getchar();
 #ifndef MANUAL_CHECK
                 if (answer == 'y')
