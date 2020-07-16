@@ -147,6 +147,8 @@ int main(void)
     // Collect correct num and calculated score
 	printf("Correct number:");
     scanf("%d", &correct_num);
+#else
+	printf("Correct: %d\n", correct_num);
 #endif
     score = ((float)correct_num/(float)w.num) * 100;
 	printf("Score: %.1f\n", score);
