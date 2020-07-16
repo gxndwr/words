@@ -4,6 +4,7 @@
 #include <sys/timeb.h>
 #include <unistd.h>
 #include <string.h>
+#include <termios.h>
 
 #if 1
 #define DEBUG
@@ -43,6 +44,26 @@ struct words_struct {
 
 static struct timeb timeSeed;
 
+void disable_io_buffer(void)
+{
+    struct termios now;
+
+	tcgetattr(0, &now);
+	now.c_lflag &= ~ICANON;
+	now.c_lflag &= ~ECHO;
+	tcsetattr(0, TCSANOW, &now);
+}
+
+void enable_io_buffer(void)
+{
+	//tcsetattr(0, TCSANOW, &old);
+    struct termios now;
+
+	tcgetattr(0, &now);
+	now.c_lflag |= ICANON;
+	now.c_lflag |= ECHO;
+	tcsetattr(0, TCSANOW, &now);
+}
 int main(void)
 {
     int i;
@@ -102,16 +123,18 @@ int main(void)
     w.word[w.num++].flag |= VALID; // for the last word
 
     // display word one by one
+    disable_io_buffer();
     for (i = 0; checked_num < w.num; i++) {
         int index = rand()%w.num;
         if (!(w.word[index].flag & CHECKED)) {
                 w.word[index].flag |= CHECKED;
                 checked_num++;
                 //dbg("w.word[%02d]: %s \t checked_num: %d\n", index, w.word[index].word, checked_num);
-                printf("%s", w.word[index].word);
+                printf("%s\n", w.word[index].word);
                 getchar();
         }
     }
+    enable_io_buffer();
 
     printf("Total: %d\n", w.num);
 
