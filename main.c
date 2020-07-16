@@ -18,16 +18,6 @@ void dbg(char *format, ...)
 }
 #endif
 
-#if 0
-static struct timeb timeSeed;
-char get_input()
-{
-	ftime(&timeSeed);
-    enqueue_seed->seed = timeSeed.time * 1000 + timeSeed.millitm;
-    enqueue_seed = enqueue_seed->next;
-    return getchar();
-}
-#endif
 #define MAX_WORDS_NUM 100
 #define VALID   (1 << 0)
 #define CHECKED (1 << 1)
