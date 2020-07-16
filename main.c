@@ -6,9 +6,8 @@
 #include <string.h>
 #include <termios.h>
 
-#if 1
 #define DEBUG
-#endif
+//#define MANUAL_CHECK
 
 #if defined(DEBUG)
 	#define dbg printf
@@ -68,6 +67,7 @@ int main(void)
 {
     int i;
     FILE *fp;
+    char answer;
     char file_name[20];
     time_t timep;
     int word_seed;
@@ -123,6 +123,7 @@ int main(void)
     w.word[w.num++].flag |= VALID; // for the last word
 
     // display word one by one
+    correct_num = 0;
     disable_io_buffer();
     for (i = 0; checked_num < w.num; i++) {
         int index = rand()%w.num;
@@ -131,16 +132,22 @@ int main(void)
                 checked_num++;
                 //dbg("w.word[%02d]: %s \t checked_num: %d\n", index, w.word[index].word, checked_num);
                 printf("%s\n", w.word[index].word);
-                getchar();
+                answer = getchar();
+#ifndef MANUAL_CHECK
+                if (answer == 'y')
+                    correct_num++;
+#endif
+
         }
     }
     enable_io_buffer();
 
     printf("Total: %d\n", w.num);
-
+#ifdef MANUAL_CHECK
     // Collect correct num and calculated score
 	printf("Correct number:");
     scanf("%d", &correct_num);
+#endif
     score = ((float)correct_num/(float)w.num) * 100;
 	printf("Score: %.1f\n", score);
 
