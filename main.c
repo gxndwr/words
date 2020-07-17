@@ -19,13 +19,14 @@ void dbg(char *format, ...)
 #endif
 
 #define MAX_WORDS_NUM 100
+#define MAX_WORD_LEN 30
 #define VALID   (1 << 0)
 #define CHECKED (1 << 1)
 #define ANSWER  (1 << 2)
 
 struct word_struct {
-    char question[20];
-    char answer[20];
+    char question[MAX_WORD_LEN ];
+    char answer[MAX_WORD_LEN ];
     int flag;
 };
 
@@ -102,10 +103,9 @@ int main(void)
             printf("Words number more than %d\n", MAX_WORDS_NUM);
             return -1;
         }
-        //dbg("i: %d\n", i);
+        //dbg("words[%d]: %c\n", i, words[i]);
         if (words[i] == ' ') {
             if (char_index != 0) {
-                exam.word[exam.num].question[char_index + 1] = 0;
                 exam.word[exam.num].flag |= VALID;
                 char_index = 0;
                 exam.num++;
@@ -121,11 +121,15 @@ int main(void)
             continue;
         }
 
-        if(exam.word[exam.num].flag & ANSWER)
+        if(exam.word[exam.num].flag & ANSWER) {
             exam.word[exam.num].answer[char_index++] = words[i];
-        else
+            exam.word[exam.num].answer[char_index] = 0;
+            //dbg("exam.word[%d].answer[%d]: %c\n", exam.num, char_index-1, words[i]);
+        } else {
             exam.word[exam.num].question[char_index++] = words[i];
-
+            exam.word[exam.num].question[char_index] = 0;
+            //dbg("exam.word[%d].question[%d]: %c\n", exam.num, char_index-1, words[i]);
+        }
         i++;
     }
     exam.word[exam.num++].flag |= VALID; // for the last word
