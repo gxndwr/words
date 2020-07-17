@@ -146,11 +146,10 @@ int main(void)
                 printf("%s: ",exam.word[index].question);
                 answer = getchar();
 #ifndef MANUAL_CHECK
-                if (answer == 'y') {
+                if (answer == 'y')
                     correct_num++;
-                    printf("\n");
-                } else
-                    printf("%s\n",exam.word[index].answer);
+
+                printf("%s\n",exam.word[index].answer);
 
 #endif
 
