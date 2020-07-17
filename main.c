@@ -153,6 +153,7 @@ int main(void)
     }
     enable_io_buffer();
 
+    printf("--------------\n");
     printf("Total: %d\n", exam.num);
 #ifdef MANUAL_CHECK
     // Collect correct num and calculated score
