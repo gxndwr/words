@@ -6,16 +6,13 @@
 #include <string.h>
 #include <termios.h>
 
-#define DEBUG
+//#define DEBUG
 //#define MANUAL_CHECK
 
 #if defined(DEBUG)
 	#define dbg printf
 #else
-void dbg(char *format, ...)
-{
-
-}
+void dbg(char *format, ...) {}
 #endif
 
 #define MAX_WORDS_NUM 100
@@ -150,7 +147,6 @@ int main(void)
                     correct_num++;
 
                 printf("%s\n",exam.word[index].answer);
-
 #endif
 
         }
