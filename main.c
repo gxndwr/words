@@ -32,8 +32,6 @@ struct exam_struct {
     int num;
 } exam;
 
-static struct timeb timeSeed;
-
 void disable_io_buffer(void)
 {
     struct termios now;
@@ -59,6 +57,7 @@ int main(void)
     int i;
     FILE *fp;
     char answer;
+    char input[14];
     char file_name[20];
     time_t timep;
     int word_seed;
@@ -70,20 +69,21 @@ int main(void)
     int checked_num = 0;
     char *date;
     float score;
+    struct timespec *tp;
 
     // collect input about exam number
 	printf("Please input exam number:");
     scanf("%d", &exam_num);
     printf("exam number: %d\n", exam_num);
 
-    sprintf(file_name, "%d", exam_num);
-    sprintf(file_name, "%s.exam", file_name);
+    sprintf(input, "%d", exam_num);
+    sprintf(file_name, "%s.exam", input);
     printf("exam file name: %s\n\n", file_name);
     printf("(pess 'y' if remember, otherwise press other key)\n");
 
     // collect launch time as random seed for word index producing
-	ftime(&timeSeed);
-    word_seed = timeSeed.time * 1000 + timeSeed.millitm;
+    clock_gettime(CLOCK_REALTIME, tp);
+    word_seed = tp->tv_sec * 1000 + tp->tv_nsec;
 	srand(word_seed);
 
     // import data from first line of exam file
