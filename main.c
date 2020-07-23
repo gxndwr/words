@@ -137,9 +137,6 @@ int main(void)
     for (i = 0; checked_num < exam.num; i++) {
         int index = rand()%exam.num;
         if (!(exam.word[index].flag & CHECKED)) {
-                exam.word[index].flag |= CHECKED;
-                checked_num++;
-                //dbg("exam.word[%02d]: %s \t checked_num: %d\n", index, exam.word[index].question, checked_num);
                 printf("%s: ",exam.word[index].question);
                 answer = getchar();
 #ifndef MANUAL_CHECK
@@ -148,7 +145,9 @@ int main(void)
 
                 printf("%s\n",exam.word[index].answer);
 #endif
-
+                exam.word[index].flag |= CHECKED;
+                checked_num++;
+                //dbg("exam.word[%02d]: %s \t checked_num: %d\n", index, exam.word[index].question, checked_num);
         }
     }
     enable_io_buffer();
