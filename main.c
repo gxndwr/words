@@ -8,7 +8,7 @@
 
 //#define DEBUG
 //#define MANUAL_CHECK
-#define  CHOICE_QUESTION
+#define CHOICE_QUESTION
 
 #if defined(DEBUG)
 	#define dbg printf
@@ -153,13 +153,13 @@ int main(void)
                 int answer_pos = rand()%4;
                 int opt_index;
                 dbg("answer_pos: %d\n", answer_pos);
-                // Print question
+                // print question
                 printf("\n%s:\n\n", exam.word[index].question);
 
                 int used_candidate_index_1;
                 int used_candidate_index_2;
                 int used_candidate_index_3;
-                // Print 1st option
+                // print 1st option
                 if (0 == answer_pos) {
                     printf("A) %s    ", exam.word[index].answer);
                 } else {
@@ -174,7 +174,7 @@ int main(void)
                     printf("A) %s    ", exam.word[opt_index].answer);
                     used_candidate_index_1 = opt_index;
                 }
-                // Print 2nd option
+                // print 2nd option
                 if (1 == answer_pos) {
                     printf("B) %s    ", exam.word[index].answer);
                 } else {
@@ -190,7 +190,7 @@ int main(void)
                     printf("B) %s    ", exam.word[opt_index].answer);
                     used_candidate_index_2 = opt_index;
                 }
-                // Print 3rd option
+                // print 3rd option
                 if (2 == answer_pos) {
                     printf("C) %s    ", exam.word[index].answer);
                 } else {
@@ -207,7 +207,7 @@ int main(void)
                     printf("C) %s    ", exam.word[opt_index].answer);
                     used_candidate_index_3 = opt_index;
                 }
-                // Print 4th option
+                // print 4th option
                 if (3 == answer_pos) {
                     printf("D) %s\n", exam.word[index].answer);
                 } else {
@@ -225,15 +225,13 @@ int main(void)
                     printf("D) %s\n", exam.word[opt_index].answer);
                 }
 
-                //printf("\n");
-
                 int a;
                 a = getchar() - 'a';
                 if (a == answer_pos) {
                     printf("Correct!\n");
                     correct_num++;
                 } else {
-                    printf("Wrong... The answer is %s\n", exam.word[index].answer);
+                    printf("Wrong... The answer is: %s\n", exam.word[index].answer);
                     int original_sec, current_sec;
                     clock_gettime(CLOCK_REALTIME, tp);
                     original_sec = tp->tv_sec;
@@ -245,7 +243,7 @@ int main(void)
                     }
                 }
 
-                //printf("%s\n",exam.word[index].answer);
+                //dbg("%s\n",exam.word[index].answer);
                 while(getchar() != '\n'){};
 #endif
                 exam.word[index].flag |= CHECKED;
@@ -260,7 +258,7 @@ int main(void)
     printf("--------------\n");
     printf("Total: %d\n", exam.num);
 #ifdef MANUAL_CHECK
-    // Collect correct num and calculated score
+    // collect correct num and calculated score
 	printf("Correct number:");
     scanf("%d", &correct_num);
 #else
