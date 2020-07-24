@@ -3,6 +3,7 @@
 #define CHOICE_QUESTION
 
 #include "exam.h"
+#include "io.h"
 #include "choice_question.h"
 
 #if defined(DEBUG)
@@ -12,27 +13,6 @@ void dbg(char *format, ...) {}
 #endif
 
 struct exam_struct exam;
-
-void disable_io_buffer(void)
-{
-    struct termios now;
-
-	tcgetattr(0, &now);
-	now.c_lflag &= ~ICANON;
-	now.c_lflag &= ~ECHO;
-	tcsetattr(0, TCSANOW, &now);
-}
-
-void enable_io_buffer(void)
-{
-	//tcsetattr(0, TCSANOW, &old);
-    struct termios now;
-
-	tcgetattr(0, &now);
-	now.c_lflag |= ICANON;
-	now.c_lflag |= ECHO;
-	tcsetattr(0, TCSANOW, &now);
-}
 
 int main(void)
 {
