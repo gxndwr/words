@@ -154,14 +154,14 @@ int main(void)
                 int opt_index;
                 dbg("answer_pos: %d\n", answer_pos);
                 // print question
-                printf("\n%s:\n\n", exam.word[index].question);
+                printf("\n  %s:\n\n", exam.word[index].question);
 
                 int used_candidate_index_1;
                 int used_candidate_index_2;
                 int used_candidate_index_3;
                 // print 1st option
                 if (0 == answer_pos) {
-                    printf("A) %s    ", exam.word[index].answer);
+                    printf(" A) %s    ", exam.word[index].answer);
                 } else {
                     opt_index = rand()%exam.num;
 
@@ -231,7 +231,7 @@ int main(void)
                     printf("Correct!\n");
                     correct_num++;
                 } else {
-                    printf("Wrong... The answer is: %s\n", exam.word[index].answer);
+                    printf("Wrong... The right answer is: %c) %s\n", 'A' + answer_pos, exam.word[index].answer);
                     int original_sec, current_sec;
                     clock_gettime(CLOCK_REALTIME, tp);
                     original_sec = tp->tv_sec;
