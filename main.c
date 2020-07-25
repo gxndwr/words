@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     long word_seed;
     int exam_num;
     char words[1000];
-    char result[MAX_WORDS_NUM];
+    char result[100];
     int char_index = 0;
     int checked_num = 0;
     char *date;
@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
     fseek(fp, 0L, SEEK_END);
     date = ctime(&timep);
     date[strlen(date)-1] = 0;
-    sprintf(result, "%s score: %.1f\n", date, score);
+    sprintf(result, "%s mode: %d score: %.1f\n", date, mode, score);
     //dbg("\nresult: %s\n", result);
     fputs(result, fp);
 
