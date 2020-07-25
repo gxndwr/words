@@ -31,11 +31,11 @@ int main(int argc, char* argv[])
     int checked_num = 0;
     char *date;
     float score;
-    enum mode {SELF, CHOICE}mode;
+    enum mode {SELF, CHOICE, CHOICE_SWAP}mode;
 
 
     // parse input arguments
-    ret = getopt(argc, argv, "sc");
+    ret = getopt(argc, argv, "scd");
     switch (ret) {
         case ('s'):
             mode = SELF;
@@ -43,6 +43,10 @@ int main(int argc, char* argv[])
             break;
         case ('c'):
             mode = CHOICE;
+            //printf("mode: %d\n", mode);
+            break;
+        case ('d'):
+            mode = CHOICE_SWAP;
             //printf("mode: %d\n", mode);
             break;
         default:
@@ -99,6 +103,17 @@ int main(int argc, char* argv[])
             continue;
         }
 
+    if (mode == CHOICE_SWAP) {
+        if(exam.word[exam.num].flag & ANSWER) {
+            exam.word[exam.num].question[char_index++] = words[i];
+            exam.word[exam.num].question[char_index] = 0;
+            //dbg("exam.word[%d].question[%d]: %c\n", exam.num, char_index-1, words[i]);
+        } else {
+            exam.word[exam.num].answer[char_index++] = words[i];
+            exam.word[exam.num].answer[char_index] = 0;
+            //dbg("exam.word[%d].answer[%d]: %c\n", exam.num, char_index-1, words[i]);
+        }
+    } else {
         if(exam.word[exam.num].flag & ANSWER) {
             exam.word[exam.num].answer[char_index++] = words[i];
             exam.word[exam.num].answer[char_index] = 0;
@@ -108,6 +123,7 @@ int main(int argc, char* argv[])
             exam.word[exam.num].question[char_index] = 0;
             //dbg("exam.word[%d].question[%d]: %c\n", exam.num, char_index-1, words[i]);
         }
+    }
         i++;
     }
     exam.word[exam.num++].flag |= VALID; // for the last word
@@ -129,7 +145,7 @@ int main(int argc, char* argv[])
                     exam.correct_num++;
 
                 printf("%s\n",exam.word[index].answer);
-            } else if (mode == CHOICE) {
+            } else if (mode == CHOICE || mode == CHOICE_SWAP) {
 
                 choice_question(&exam, index);
 
