@@ -2,6 +2,7 @@
 //#define MANUAL_CHECK
 #define CHOICE_QUESTION
 
+#include <unistd.h>
 #include "exam.h"
 #include "io.h"
 #include "choice_question.h"
@@ -14,9 +15,9 @@ void dbg(char *format, ...) {}
 
 struct exam_struct exam;
 
-int main(void)
+int main(int argc, char* argv[])
 {
-    int i;
+    int i, ret;
     FILE *fp;
     char answer;
     char input[14];
@@ -30,18 +31,36 @@ int main(void)
     int checked_num = 0;
     char *date;
     float score;
+    enum mode {SELF, CHOICE}mode;
+
+
+    // parse input arguments
+    ret = getopt(argc, argv, "sc");
+    switch (ret) {
+        case ('s'):
+            mode = SELF;
+            //printf("mode: %d\n", mode);
+            break;
+        case ('c'):
+            mode = CHOICE;
+            //printf("mode: %d\n", mode);
+            break;
+        default:
+            printf("usage: ./words [-s] [-c]\n");
+            exit(-1);
+    }
 
     // collect input about exam number
 	printf("Please input exam number:");
     scanf("%d", &exam_num);
     printf("exam number: %d\n", exam_num);
-
     sprintf(input, "%d", exam_num);
     sprintf(file_name, "%s.exam", input);
     printf("exam file name: %s\n\n", file_name);
-#ifndef   CHOICE_QUESTION
-    printf("(pess 'y' if remember, otherwise press other key)\n");
-#endif
+
+
+    if (mode == SELF)
+        printf("(pess 'y' if remember, otherwise press other key)\n");
 
     // collect launch time as random seed for word index producing
     clock_gettime(CLOCK_REALTIME, &exam.tp);
@@ -95,42 +114,38 @@ int main(void)
 
     // display word one by one
     exam.correct_num = 0;
-#ifndef   CHOICE_QUESTION
-    disable_io_buffer();
-#endif
+
+    if (mode == SELF)
+        disable_io_buffer();
+
     for (i = 0; checked_num < exam.num; i++) {
         int index = rand()%exam.num;
         if (!(exam.word[index].flag & CHECKED)) {
-#ifndef CHOICE_QUESTION
+
+            if (mode == SELF) {
                 printf("%s: ",exam.word[index].question);
                 answer = getchar();
-#ifndef MANUAL_CHECK
                 if (answer == 'y')
                     exam.correct_num++;
 
                 printf("%s\n",exam.word[index].answer);
-#endif
-#else
+            } else if (mode == CHOICE) {
+
                 choice_question(&exam, index);
-#endif
-                exam.word[index].flag |= CHECKED;
-                checked_num++;
-                //dbg("exam.word[%02d]: %s \t checked_num: %d\n", index, exam.word[index].question, checked_num);
+
+            }
+            exam.word[index].flag |= CHECKED;
+            checked_num++;
+            //dbg("exam.word[%02d]: %s \t checked_num: %d\n", index, exam.word[index].question, checked_num);
         }
     }
-#ifndef   CHOICE_QUESTION
-    enable_io_buffer();
-#endif
+
+    if (mode == SELF)
+        enable_io_buffer();
 
     printf("--------------\n");
     printf("Total: %d\n", exam.num);
-#ifdef MANUAL_CHECK
-    // collect correct num and calculated score
-	printf("Correct number:");
-    scanf("%d", &exam.correct_num);
-#else
 	printf("Correct: %d\n", exam.correct_num);
-#endif
     score = ((float)exam.correct_num/(float)exam.num) * 100;
 	printf("Score: %.1f\n", score);
 
