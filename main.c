@@ -6,6 +6,7 @@
 #include "exam.h"
 #include "io.h"
 #include "choice_question.h"
+#include "fill_in_question.h"
 
 #if defined(DEBUG)
 	#define dbg printf
@@ -25,17 +26,17 @@ int main(int argc, char* argv[])
     time_t timep;
     long word_seed;
     int exam_num;
-    char words[1000];
+    char words[3000];
     char result[100];
     int char_index = 0;
     int checked_num = 0;
     char *date;
     float score;
-    enum mode {SELF, CHOICE, CHOICE_SWAP}mode;
+    enum mode {SELF, CHOICE, CHOICE_SWAP, FILL_IN}mode;
 
 
     // parse input arguments
-    ret = getopt(argc, argv, "scd");
+    ret = getopt(argc, argv, "scdf");
     switch (ret) {
         case ('s'):
             mode = SELF;
@@ -47,6 +48,10 @@ int main(int argc, char* argv[])
             break;
         case ('d'):
             mode = CHOICE_SWAP;
+            //printf("mode: %d\n", mode);
+            break;
+        case ('f'):
+            mode = FILL_IN;
             //printf("mode: %d\n", mode);
             break;
         default:
@@ -103,7 +108,7 @@ int main(int argc, char* argv[])
             continue;
         }
 
-    if (mode == CHOICE_SWAP) {
+    if (mode == CHOICE_SWAP || mode == FILL_IN) { // asking in Englis
         if(exam.word[exam.num].flag & ANSWER) {
             exam.word[exam.num].question[char_index++] = words[i];
             exam.word[exam.num].question[char_index] = 0;
@@ -114,7 +119,7 @@ int main(int argc, char* argv[])
             //dbg("exam.word[%d].answer[%d]: %c\n", exam.num, char_index-1, words[i]);
         }
     } else {
-        if(exam.word[exam.num].flag & ANSWER) {
+        if(exam.word[exam.num].flag & ANSWER) { // answering in English
             exam.word[exam.num].answer[char_index++] = words[i];
             exam.word[exam.num].answer[char_index] = 0;
             //dbg("exam.word[%d].answer[%d]: %c\n", exam.num, char_index-1, words[i]);
@@ -149,6 +154,9 @@ int main(int argc, char* argv[])
 
                 choice_question(&exam, index);
 
+            } else if (mode == FILL_IN) {
+                //printf("FILL_IN mode\n");
+                fill_in_question(&exam, index);
             }
             exam.word[index].flag |= CHECKED;
             checked_num++;
