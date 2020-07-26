@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
     // import data from first line of exam file
     fp = fopen(file_name, "a+");
     fseek(fp, 0L, SEEK_SET);
-    fgets(words, 1000, fp);
+    fgets(words, 5000, fp);
     //dbg("exam words: %s\n", words);
     getchar();
 
