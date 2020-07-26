@@ -3,12 +3,24 @@
 
 void fill_in_question(struct exam_struct *e, int index )
 {
+    int i = 0;
     char input[MAX_WORD_LEN];
 
     printf("\n  %s: ", e->word[index].question);
 
     // collect input and make judgement
-    scanf("%s", input);
+    fgets(input, MAX_WORD_LEN, stdin);
+
+    while(input[i] != 10) {
+        //printf("iput[%d]: %d, %c\n", i, input[i], input[i]);
+        if (input[i] == ' '){
+            //printf("found space\n");
+            input[i] = '_';
+        }
+        i++;
+    }
+    input[i] = 0; // remove '/n'
+
     if (!strcmp(input, e->word[index].answer)) {
         printf("Correct!\n");
         e->correct_num++;
