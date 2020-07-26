@@ -26,8 +26,8 @@ int main(int argc, char* argv[])
     time_t timep;
     long word_seed;
     int exam_num;
-    char words[3000];
-    char result[100];
+    char words[MAX_BUFFER_SIZE];
+    char result[MAX_RESULT_LEN];
     int char_index = 0;
     int checked_num = 0;
     char *date;

@@ -8,6 +8,9 @@
 
 #define MAX_WORDS_NUM 100
 #define MAX_WORD_LEN 50
+#define MAX_BUFFER_SIZE 5000
+#define MAX_RESULT_LEN 100
+
 #define VALID   (1 << 0)
 #define CHECKED (1 << 1)
 #define ANSWER  (1 << 2)
