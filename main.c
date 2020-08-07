@@ -3,6 +3,7 @@
 #define CHOICE_QUESTION
 
 #include <unistd.h>
+#include <unistd.h>
 #include "exam.h"
 #include "io.h"
 #include "choice_question.h"
@@ -59,6 +60,7 @@ int main(int argc, char* argv[])
             exit(-1);
     }
 
+again:
     // collect input about exam number
 	printf("Please input exam number:");
     scanf("%s", exam_name);
@@ -75,6 +77,12 @@ int main(int argc, char* argv[])
     clock_gettime(CLOCK_REALTIME, &exam.tp);
     word_seed = exam.tp.tv_sec * 1000 + exam.tp.tv_nsec;
 	srand(word_seed);
+
+    // file exists?
+    if (access(file_name, 0)) {
+        printf("File doesn't exist, please try again\n");
+        goto again;
+    }
 
     // import data from first line of exam file
     fp = fopen(file_name, "a+");
