@@ -102,7 +102,10 @@ again:
         if (words[i] == ' ') {
             if (char_index != 0) { // exclude multiple space case
                 if (!(exam.word[exam.num].flag & ANSWER)) {
-                    printf("found incorrect word format: %s\n", exam.word[exam.num].question);
+                    if (mode == CHOICE_SWAP || mode == FILL_IN) // swap question and answer
+                        printf("found incorrect word format: %s\n", exam.word[exam.num].answer);
+                    else
+                        printf("found incorrect word format: %s\n", exam.word[exam.num].question);
                     char_index = 0;
                 } else {
                     exam.word[exam.num].flag |= VALID;
@@ -111,7 +114,10 @@ again:
                 }
             } else {
                 if (!(exam.word[exam.num].flag & VALID)) {
-                    printf("found incorrect word format: %s\n", exam.word[exam.num].question);
+                    if (mode == CHOICE_SWAP || mode == FILL_IN) // swap question and answer
+                        printf("found incorrect word format: %s\n", exam.word[exam.num].answer);
+                    else
+                        printf("found incorrect word format: %s\n", exam.word[exam.num].question);
                     char_index = 0;
                 }
             }
