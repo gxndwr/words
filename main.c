@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
             //printf("mode: %d\n", mode);
             break;
         default:
-            printf("usage: ./words [-s] [-c]\n");
+            printf("usage: ./words [-scdf] \n");
             exit(-1);
     }
 
