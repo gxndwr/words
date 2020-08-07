@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     char file_name[20];
     time_t timep;
     long word_seed;
-    int exam_num;
+    char exam_name[15];
     char words[MAX_BUFFER_SIZE];
     char result[MAX_RESULT_LEN];
     int char_index = 0;
@@ -61,9 +61,9 @@ int main(int argc, char* argv[])
 
     // collect input about exam number
 	printf("Please input exam number:");
-    scanf("%d", &exam_num);
-    printf("exam number: %d\n", exam_num);
-    sprintf(input, "%d", exam_num);
+    scanf("%s", exam_name);
+    printf("exam number: %s\n", exam_name);
+    sprintf(input, "%s", exam_name);
     sprintf(file_name, "%s.exam", input);
     printf("exam file name: %s\n\n", file_name);
 
