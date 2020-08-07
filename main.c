@@ -100,16 +100,26 @@ again:
         }
         //dbg("words[%d]: %c\n", i, words[i]);
         if (words[i] == ' ') {
-            if (char_index != 0) {
-                exam.word[exam.num].flag |= VALID;
-                char_index = 0;
-                exam.num++;
+            if (char_index != 0) { // exclude multiple space case
+                if (!(exam.word[exam.num].flag & ANSWER)) {
+                    printf("found incorrect word format: %s\n", exam.word[exam.num].question);
+                    char_index = 0;
+                } else {
+                    exam.word[exam.num].flag |= VALID;
+                    char_index = 0;
+                    exam.num++;
+                }
+            } else {
+                if (!(exam.word[exam.num].flag & VALID)) {
+                    printf("found incorrect word format: %s\n", exam.word[exam.num].question);
+                    char_index = 0;
+                }
             }
             i++;
             continue;
         }
 
-        if (words[i] == ':') {
+        if ((words[i] == ':') && (words[i+1] != ' ')) { // invalid case: "word1: word2:xxx"
             exam.word[exam.num].flag |= ANSWER;
             char_index = 0;
             i++;
