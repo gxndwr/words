@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     int i, ret;
     FILE *fp;
     char answer;
-    char input[14];
+    char input[15];
     char file_name[20];
     time_t timep;
     long word_seed;
