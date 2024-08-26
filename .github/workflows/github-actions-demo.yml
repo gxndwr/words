@@ -17,5 +17,5 @@ jobs:
           ls ${{ github.workspace }}
       - name: show riscv64 toolchain package
         run: |
-          ls ${{ github.workspace }}
+          apt search gcc-riscv
       - run: echo "🍏 This job's status is ${{ job.status }}."
