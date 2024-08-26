@@ -18,4 +18,7 @@ jobs:
       - name: show riscv64 toolchain package
         run: |
           apt search gcc-riscv
+      - name: install riscv64 toolchain package
+        run: |
+          apt install gcc-riscv64-linux-gnu
       - run: echo "🍏 This job's status is ${{ job.status }}."
