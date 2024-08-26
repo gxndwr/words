@@ -21,4 +21,5 @@ jobs:
       - name: install riscv64 toolchain package
         run: |
           sudo apt install gcc-riscv64-linux-gnu
+          gcc-riscv64-linux-gnu -v
       - run: echo "🍏 This job's status is ${{ job.status }}."
